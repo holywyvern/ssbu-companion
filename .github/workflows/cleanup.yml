@@ -1,0 +1,15 @@
+name: Daily Database Cleanup
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Cleanup Script
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          npm install firebase-admin
+          node scripts/cleanup.js
