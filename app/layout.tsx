@@ -4,7 +4,7 @@ import "./globals.css";
 
 import { Toaster } from "@/components/ui/toast";
 import { ThemeProvider } from "@/components/theme-provider";
-import AppNav from "@/components/app-nav";
+import AppNav, { AppProvider } from "@/components/app-nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,9 +34,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           enableSystem
           disableTransitionOnChange
         >
-          <AppNav />
-          <main className="flex flex-col flex-1">{children}</main>
-          <Toaster />
+          <AppProvider>
+            <AppNav />
+            <main className="flex flex-col flex-1">{children}</main>
+            <Toaster />
+          </AppProvider>
         </ThemeProvider>
       </body>
     </html>

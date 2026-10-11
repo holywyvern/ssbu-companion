@@ -17,14 +17,14 @@ export default function HomeTabs({ onTabChange }: HomeTabsProps) {
 
   return (
     <Tabs value={tab} onValueChange={handleTabChange}>
-        <TabsList variant="line">
-          <TabsTrigger value="create-lobby">
-            <Plus /> Create Lobby
-          </TabsTrigger>
-          <TabsTrigger value="join-lobby">
-            <Merge /> Join Lobby
-          </TabsTrigger>
-        </TabsList>
+      <TabsList variant="line">
+        <TabsTrigger value="create-lobby">
+          <Plus /> Create
+        </TabsTrigger>
+        <TabsTrigger value="join-lobby">
+          <Merge /> Join
+        </TabsTrigger>
+      </TabsList>
     </Tabs>
   );
 }
