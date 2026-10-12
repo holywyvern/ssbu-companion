@@ -1,6 +1,6 @@
 "use client";
 
-import { ComponentType } from "react";
+import { ComponentType, SubmitEventHandler, useContext } from "react";
 import { Zap, Trophy, Swords, UserStar, Crown, House } from "lucide-react";
 
 import {
@@ -11,7 +11,6 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-
 import {
   Questionnaire,
   QuestionnaireItem,
@@ -27,6 +26,8 @@ import {
   QuestionnaireProgress,
 } from "@/components/ui/questionnaire";
 import { Separator } from "@/components/ui/separator";
+
+import { AppContext } from "@/lib/hooks/useApp";
 
 type Question = {
   title: string;
@@ -89,34 +90,49 @@ const questions: Question[] = [
 ];
 
 export default function NewLobbyTab() {
+  const { lobby } = useContext(AppContext);
+  const onSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const format = formData.get("format") as string;
+    const assignment = formData.get("assignment") as string;
+    lobby.create(format, assignment);
+  };
   return (
     <Card>
       <CardHeader>
         <CardTitle>Set Up a new Lobby</CardTitle>
         <CardDescription>Configure a new lobby in two steps.</CardDescription>
       </CardHeader>
-      <Questionnaire className="mx-auto max-w-md" items={questions}>
+      <Questionnaire
+        className="mx-auto max-w-md"
+        items={questions}
+        onSubmit={onSubmit}
+      >
         <CardContent>
-          <QuestionnaireProgress className="w-full" render={(props, state) => (
-          <div {...props}>
-            <div className="mb-2 flex gap-1.5" aria-hidden="true">
-              {Array.from({ length: state.total }, (_, index) => (
-                <span
-                  key={index}
-                  className={
-                    index < state.current
-                      ? "h-1.5 flex-1 rounded-full bg-primary"
-                      : "h-1.5 flex-1 rounded-full bg-muted"
-                  }
-                />
-              ))}
-            </div>
-            <span>
-              Step {state.current} of {state.total}
-            </span>
-          </div>
-        )} />
-        <Separator className="my-2" />
+          <QuestionnaireProgress
+            className="w-full"
+            render={(props, state) => (
+              <div {...props}>
+                <div className="mb-2 flex gap-1.5" aria-hidden="true">
+                  {Array.from({ length: state.total }, (_, index) => (
+                    <span
+                      key={index}
+                      className={
+                        index < state.current
+                          ? "h-1.5 flex-1 rounded-full bg-primary"
+                          : "h-1.5 flex-1 rounded-full bg-muted"
+                      }
+                    />
+                  ))}
+                </div>
+                <span>
+                  Step {state.current} of {state.total}
+                </span>
+              </div>
+            )}
+          />
+          <Separator className="my-2" />
           {questions.map((question) => (
             <QuestionnaireItem
               key={question.name}
@@ -161,7 +177,7 @@ export default function NewLobbyTab() {
             </QuestionnaireItem>
           ))}
         </CardContent>
-        <CardFooter> 
+        <CardFooter>
           <QuestionnaireActions>
             <QuestionnairePrevious>Previous</QuestionnairePrevious>
             <QuestionnaireNext>Next</QuestionnaireNext>

@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toast";
 import { ThemeProvider } from "@/components/theme-provider";
 import AppNav, { AppProvider } from "@/components/app-nav";
+import AuthProvider from "@/components/auth-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +38,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           <AppProvider>
             <AppNav />
-            <main className="flex flex-col flex-1">{children}</main>
+            <main className="flex flex-col flex-1">
+              <AuthProvider>{children}</AuthProvider>
+            </main>
             <Toaster />
           </AppProvider>
         </ThemeProvider>

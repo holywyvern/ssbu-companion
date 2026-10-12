@@ -13,7 +13,6 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-  InputOTPSeparator,
 } from "@/components/ui/input-otp";
 
 export default function JoinLobbyTab() {
@@ -21,21 +20,17 @@ export default function JoinLobbyTab() {
     <Card>
       <CardHeader>
         <CardTitle>Join a Lobby</CardTitle>
-        <CardDescription>Enter the 6-digit code to join an existing lobby.</CardDescription>
+        <CardDescription>
+          Enter the 6-digit code to join an existing lobby.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <InputOTP maxLength={6} required>
           <InputOTPGroup>
             <InputOTPSlot index={0} />
             <InputOTPSlot index={1} />
-          </InputOTPGroup>
-          <InputOTPSeparator />
-          <InputOTPGroup>
             <InputOTPSlot index={2} />
             <InputOTPSlot index={3} />
-          </InputOTPGroup>
-          <InputOTPSeparator />
-          <InputOTPGroup>
             <InputOTPSlot index={4} />
             <InputOTPSlot index={5} />
           </InputOTPGroup>
