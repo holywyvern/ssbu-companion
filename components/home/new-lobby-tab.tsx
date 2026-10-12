@@ -1,6 +1,6 @@
 "use client";
 
-import { ComponentType, SubmitEventHandler, useContext } from "react";
+import { ComponentType, SubmitEventHandler, useContext, useState } from "react";
 import { Zap, Trophy, Swords, UserStar, Crown, House } from "lucide-react";
 
 import {
@@ -26,6 +26,8 @@ import {
   QuestionnaireProgress,
 } from "@/components/ui/questionnaire";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/toast";
+
 
 import { AppContext } from "@/lib/hooks/useApp";
 
@@ -90,13 +92,24 @@ const questions: Question[] = [
 ];
 
 export default function NewLobbyTab() {
+  const [formDisabled, setFormDisabled] = useState(false);
   const { lobby } = useContext(AppContext);
-  const onSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
+  const onSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const format = formData.get("format") as string;
     const assignment = formData.get("assignment") as string;
-    lobby.create(format, assignment);
+    setFormDisabled(true);
+    try {
+      await lobby.create(format, assignment);
+    } catch (error) {
+      toast.add({
+        type: "error",
+        title: "Error",
+        description: "Failed to create lobby.",
+      });
+    }
+    setFormDisabled(false);
   };
   return (
     <Card>
@@ -179,9 +192,9 @@ export default function NewLobbyTab() {
         </CardContent>
         <CardFooter>
           <QuestionnaireActions>
-            <QuestionnairePrevious>Previous</QuestionnairePrevious>
-            <QuestionnaireNext>Next</QuestionnaireNext>
-            <QuestionnaireSubmit>Create Lobby</QuestionnaireSubmit>
+            <QuestionnairePrevious disabled={formDisabled}>Previous</QuestionnairePrevious>
+            <QuestionnaireNext disabled={formDisabled}>Next</QuestionnaireNext>
+            <QuestionnaireSubmit disabled={formDisabled}>Create Lobby</QuestionnaireSubmit>
           </QuestionnaireActions>
         </CardFooter>
       </Questionnaire>
