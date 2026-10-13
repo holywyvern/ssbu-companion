@@ -5,13 +5,28 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
 
 export default function Invite() {
   const { lobby } = useContext(AppContext);
+  const copyCode = () => {
+    navigator.clipboard.writeText(lobby.id ?? "");
+    toast.add({
+      type: "info",
+      title: "Code copied",
+      description: "Code copied to clipboard",
+    });
+  };
   return (
     <div className="p-4 flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <Card>
@@ -22,7 +37,7 @@ export default function Invite() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <InputOTP defaultValue={lobby.id ?? ""} readOnly maxLength={6}>
+          <InputOTP value={lobby.id ?? ""} readOnly maxLength={6}>
             <InputOTPGroup>
               <InputOTPSlot index={0} />
               <InputOTPSlot index={1} />
@@ -33,6 +48,9 @@ export default function Invite() {
             </InputOTPGroup>
           </InputOTP>
         </CardContent>
+        <CardFooter>
+          <Button onClick={copyCode}>Copy Code</Button>
+        </CardFooter>
       </Card>
     </div>
   );
