@@ -10,6 +10,9 @@
         "guestId": {
           ".validate": "newData.isString()"
         },
+        "closedBy": {
+          ".validate": "newData.isString() && (data.exists() ? data.val() === newData.val() : newData.val() === auth.uid) && (newData.val() === root.child('lobbies').child($lobbyId).child('hostId').val() || newData.val() === root.child('lobbies').child($lobbyId).child('guestId').val())"
+        },
         "status": {
           ".validate": "newData.isString() && newData.val().matches(/^(LOBBY_SETUP|rps|hostPicks|guestPicks|game)$/) && (!data.exists() || data.val() !== 'game' || newData.val() === 'game' || auth.uid === data.parent().child('hostId').val())"
         },

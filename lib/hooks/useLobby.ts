@@ -6,6 +6,7 @@ import type { GameState } from "@/lib/game";
 export interface Lobby {
   hostId: string;
   guestId?: string;
+  closedBy?: string;
   status: string;
   settings: { format: string; assignment: string };
   createdAt: number;

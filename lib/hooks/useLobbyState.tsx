@@ -7,11 +7,13 @@ export type LobbyViewState =
   | "rps"
   | "pickSide"
   | "waitingSide"
-  | "game";
+  | "game"
+  | "closed";
 
 export default function useLobbyState(): LobbyViewState {
   const { lobby } = useContext(AppContext);
   if (lobby.loading) return "loading";
+  if (lobby.data?.closedBy) return "closed";
   const status = lobby.data?.status;
   if (status === "rps") return "rps";
   if (status === "hostPicks" || status === "guestPicks") {

@@ -11,6 +11,9 @@ import GameTab from "@/components/pages/game-tab";
 import Select from "@/components/select";
 import LoadingRoom from "@/components/preload/loading-room";
 import ChatDock from "@/components/chat/chat-dock";
+import AppNav from "@/components/app-nav";
+import LeaveLobbyButton from "@/components/lobby/leave-lobby-button";
+import LobbyClosedTab from "@/components/lobby/lobby-closed-tab";
 
 const wrap = (Tab: React.ComponentType) =>
   function Page() {
@@ -24,12 +27,18 @@ const pages = {
   pickSide: wrap(PickSideTab),
   waitingSide: wrap(WaitingSideTab),
   game: GameTab,
+  closed: wrap(LobbyClosedTab),
 };
 
 export default function Lobby() {
   const state = useLobbyState();
   return (
     <div className="flex flex-1 flex-col lg:flex-row">
+      {state !== "closed" && state !== "loading" && (
+        <AppNav.Navigation>
+          <LeaveLobbyButton />
+        </AppNav.Navigation>
+      )}
       <div className="flex min-w-0 flex-1 flex-col">
         <Select value={state} pages={pages} />
       </div>

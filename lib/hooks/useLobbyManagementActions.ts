@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
-import { createLobby, joinLobby } from "@/lib/services/lobbies";
+import { createLobby, joinLobby, leaveLobby } from "@/lib/services/lobbies";
 
 export default function useLobbyManagementActions(
   uid: string,
+  id: string | null,
   setId: Dispatch<SetStateAction<string | null>>,
   setPage: Dispatch<SetStateAction<string>>,
 ) {
@@ -16,5 +17,10 @@ export default function useLobbyManagementActions(
     setId(lobbyId);
     setPage("lobby");
   };
-  return { create, join };
+  const leave = async () => {
+    if (id) await leaveLobby(id, uid);
+    setId(null);
+    setPage("home");
+  };
+  return { create, join, leave };
 }

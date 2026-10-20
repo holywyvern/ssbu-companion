@@ -13,7 +13,7 @@ export default function useLobbyActions(
   const user = useUser();
   const [id, setId] = useState<string | null>(null);
   const lobby = useLobby(id);
-  const management = useLobbyManagementActions(user.uid, setId, setPage);
+  const management = useLobbyManagementActions(user.uid, id, setId, setPage);
   const rps = useLobbyRpsActions(user.uid, id, lobby.data);
   const game = useLobbyGameActions(user.uid, id, lobby.data);
   const chat = useLobbyChatActions(user.uid, id, lobby.data);

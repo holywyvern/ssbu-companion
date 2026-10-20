@@ -32,7 +32,7 @@ export default function ChatDock() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, close]);
 
-  if (lobby.loading || !lobby.data?.guestId) return null;
+  if (lobby.loading || !lobby.data?.guestId || lobby.data.closedBy) return null;
 
   return (
     <>

@@ -66,6 +66,19 @@ export async function pickSide(
   });
 }
 
+export async function leaveLobby(lobbyId: string, uid: string) {
+  await runTransaction(ref(db, `lobbies/${lobbyId}`), (lobby) => {
+    // First run uses the (empty) local cache; returning null makes the SDK
+    // retry with server data.
+    if (lobby === null) return lobby;
+    if (lobby.hostId !== uid && lobby.guestId !== uid) return;
+    // Nobody is left to protect: remove the lobby entirely.
+    if (lobby.closedBy || !lobby.guestId) return null;
+    lobby.closedBy = uid;
+    return lobby;
+  });
+}
+
 export async function joinLobby(guestId: string, lobbyId: string) {
   const lobbyRef = ref(db, `lobbies/${lobbyId}`);
 
@@ -75,6 +88,9 @@ export async function joinLobby(guestId: string, lobbyId: string) {
         // First run uses the (empty) local cache; aborting here would fail
         // every join. Returning null makes the SDK retry with server data.
         return currentLobby;
+      }
+      if (currentLobby.closedBy) {
+        return;
       }
       if (currentLobby.guestId && currentLobby.guestId !== guestId) {
         return;
@@ -88,7 +104,7 @@ export async function joinLobby(guestId: string, lobbyId: string) {
       return currentLobby;
     });
     if (!result.committed || !result.snapshot.exists()) {
-      throw new Error("Lobby is already full or does not exist.");
+      throw new Error("Lobby is already full, closed or does not exist.");
     }
   } catch (error: any) {
     console.error("Error joining lobby:", error);
