@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { Check } from "lucide-react";
-import { CHARACTERS } from "@/lib/game";
+import Image from "next/image";
+import { CHARACTERS, CHARACTER_COLUMNS, characterIcon } from "@/lib/game";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -16,9 +17,7 @@ export default function CharacterPicker({
 }: CharacterPickerProps) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
-  const filtered = CHARACTERS.filter((name) =>
-    name.toLowerCase().includes(query.trim().toLowerCase()),
-  );
+  const term = query.trim().toLowerCase();
   return (
     <div className="flex flex-col gap-3">
       <Input
@@ -26,23 +25,31 @@ export default function CharacterPicker({
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
-      <div className="grid max-h-64 grid-cols-2 gap-2 overflow-y-auto">
-        {filtered.map((name) => (
-          <Button
-            key={name}
-            type="button"
-            size="sm"
-            variant={selected === name ? "default" : "outline"}
-            onClick={() => setSelected(name)}
-          >
-            {name}
-          </Button>
-        ))}
-        {filtered.length === 0 && (
-          <p className="col-span-2 text-sm text-muted-foreground">
-            No characters found.
-          </p>
-        )}
+      <div
+        className="grid gap-1"
+        style={{
+          gridTemplateColumns: `repeat(${CHARACTER_COLUMNS}, minmax(0, 1fr))`,
+        }}
+      >
+        {CHARACTERS.map((name) => {
+          const icon = characterIcon(name);
+          const dimmed = term !== "" && !name.toLowerCase().includes(term);
+          return (
+            <Button
+              key={name}
+              type="button"
+              title={name}
+              aria-label={name}
+              variant={selected === name ? "default" : "outline"}
+              className={`aspect-square h-auto w-full p-0.5 ${
+                dimmed ? "opacity-25" : ""
+              }`}
+              onClick={() => setSelected(name)}
+            >
+              {icon && <Image src={icon} alt="" width={64} height={64} />}
+            </Button>
+          );
+        })}
       </div>
       <Button
         disabled={!selected || disabled}

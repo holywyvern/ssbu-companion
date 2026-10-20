@@ -1,3 +1,25 @@
+import Image from "next/image";
+import { characterIcon } from "@/lib/game";
+
+function Pick({
+  label,
+  name,
+  fallback,
+}: {
+  label: string;
+  name?: string;
+  fallback: string;
+}) {
+  const icon = name ? characterIcon(name) : null;
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <div className="text-muted-foreground">{label}</div>
+      {icon && <Image src={icon} alt="" width={48} height={48} />}
+      <div className="font-medium">{name ?? fallback}</div>
+    </div>
+  );
+}
+
 export default function CharacterSummary({
   mine,
   theirs,
@@ -8,14 +30,8 @@ export default function CharacterSummary({
   if (!mine && !theirs) return null;
   return (
     <div className="flex justify-around text-center text-sm">
-      <div>
-        <div className="text-muted-foreground">You</div>
-        <div className="font-medium">{mine ?? "-"}</div>
-      </div>
-      <div>
-        <div className="text-muted-foreground">Opponent</div>
-        <div className="font-medium">{theirs ?? "Hidden"}</div>
-      </div>
+      <Pick label="You" name={mine} fallback="-" />
+      <Pick label="Opponent" name={theirs} fallback="Hidden" />
     </div>
   );
 }
