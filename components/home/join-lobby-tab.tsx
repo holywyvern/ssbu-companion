@@ -1,6 +1,7 @@
 "use client";
 
 import { SubmitEventHandler, useContext, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { AppContext } from "@/lib/hooks/useApp";
 import { toast } from "@/components/ui/toast";
 import {
@@ -20,7 +21,10 @@ import {
 
 export default function JoinLobbyTab() {
   const { lobby } = useContext(AppContext);
-  const [code, setCode] = useState("");
+  const initialCode = useSearchParams().get("code") ?? "";
+  const [code, setCode] = useState(
+    /^[A-Za-z0-9]{6}$/.test(initialCode) ? initialCode.toUpperCase() : "",
+  );
   const [loading, setLoading] = useState(false);
 
   const onSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import AppNav from "@/components/app-nav";
 import HomeTabs from "@/components/home/home-tabs";
@@ -14,11 +15,12 @@ const TABS = {
 };
 
 export default function Home() {
-  const [tab, setTab] = useState("create-lobby");
+  const hasCode = useSearchParams().has("code");
+  const [tab, setTab] = useState(hasCode ? "join-lobby" : "create-lobby");
   return (
     <div className="p-4 flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <AppNav.Navigation>
-        <HomeTabs onTabChange={setTab} />
+        <HomeTabs value={tab} onTabChange={setTab} />
       </AppNav.Navigation>
       <div className="my-4">
         <Select value={tab} pages={TABS} />

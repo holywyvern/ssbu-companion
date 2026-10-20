@@ -1,4 +1,5 @@
-import { useContext } from "react";
+import { useContext, useSyncExternalStore } from "react";
+import { QRCodeSVG } from "qrcode.react";
 
 import { AppContext } from "@/lib/hooks/useApp";
 import {
@@ -17,8 +18,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 
+const subscribe = () => () => {};
+const getOrigin = () => window.location.origin;
+const getServerOrigin = () => "";
+
 export default function Invite() {
   const { lobby } = useContext(AppContext);
+  const origin = useSyncExternalStore(subscribe, getOrigin, getServerOrigin);
+  const joinUrl =
+    origin && lobby.id ? `${origin}/?code=${encodeURIComponent(lobby.id)}` : "";
   const copyCode = () => {
     navigator.clipboard.writeText(lobby.id ?? "");
     toast.add({
@@ -36,7 +44,17 @@ export default function Invite() {
             Give this code to your opponent to join the lobby.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-col items-center gap-4">
+          {joinUrl && (
+            <QRCodeSVG
+              value={joinUrl}
+              size={176}
+              marginSize={4}
+              level="M"
+              title="Scan to join the lobby"
+              className="rounded-md bg-white"
+            />
+          )}
           <InputOTP value={lobby.id ?? ""} readOnly maxLength={6}>
             <InputOTPGroup>
               <InputOTPSlot index={0} />
