@@ -22,5 +22,9 @@ export default function useLobbyManagementActions(
     setId(null);
     setPage("home");
   };
-  return { create, join, leave };
+  const exit = () => {
+    setId(null);
+    setPage("home");
+  };
+  return { create, join, leave, exit };
 }

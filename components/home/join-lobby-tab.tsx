@@ -33,11 +33,15 @@ export default function JoinLobbyTab() {
     setLoading(true);
     try {
       await lobby.join(code.toUpperCase());
-    } catch {
+    } catch (error) {
+      const known =
+        error instanceof Error && error.message.startsWith("Lobby is already");
       toast.add({
         type: "error",
-        title: "Error",
-        description: "Failed to join lobby. Check the code and try again.",
+        title: "Could not join",
+        description: known
+          ? "That lobby is full, closed or does not exist."
+          : "Failed to join lobby. Check your connection and the code, then try again.",
       });
     }
     setLoading(false);
@@ -76,7 +80,7 @@ export default function JoinLobbyTab() {
             className="w-full"
             disabled={loading || code.length !== 6}
           >
-            Join Room
+            {loading ? "Joining..." : "Join Room"}
           </Button>
         </CardFooter>
       </form>
