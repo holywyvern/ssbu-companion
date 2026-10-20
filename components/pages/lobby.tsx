@@ -10,6 +10,7 @@ import PickSideTab from "@/components/home/pick-side-tab";
 import GameTab from "@/components/pages/game-tab";
 import Select from "@/components/select";
 import LoadingRoom from "@/components/preload/loading-room";
+import ChatDock from "@/components/chat/chat-dock";
 
 const wrap = (Tab: React.ComponentType) =>
   function Page() {
@@ -27,5 +28,12 @@ const pages = {
 
 export default function Lobby() {
   const state = useLobbyState();
-  return <Select value={state} pages={pages} />;
+  return (
+    <div className="flex flex-1 flex-col lg:flex-row">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Select value={state} pages={pages} />
+      </div>
+      <ChatDock />
+    </div>
+  );
 }

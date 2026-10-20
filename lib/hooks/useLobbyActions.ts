@@ -5,6 +5,7 @@ import useLobby from "@/lib/hooks/useLobby";
 import useLobbyManagementActions from "@/lib/hooks/useLobbyManagementActions";
 import useLobbyRpsActions from "@/lib/hooks/useLobbyRpsActions";
 import useLobbyGameActions from "@/lib/hooks/useLobbyGameActions";
+import useLobbyChatActions from "@/lib/hooks/useLobbyChatActions";
 
 export default function useLobbyActions(
   setPage: Dispatch<SetStateAction<string>>,
@@ -15,6 +16,7 @@ export default function useLobbyActions(
   const management = useLobbyManagementActions(user.uid, setId, setPage);
   const rps = useLobbyRpsActions(user.uid, id, lobby.data);
   const game = useLobbyGameActions(user.uid, id, lobby.data);
+  const chat = useLobbyChatActions(user.uid, id, lobby.data);
   const isHost = lobby.data?.hostId === user.uid;
   const isGuest = lobby.data?.guestId === user.uid;
   return {
@@ -26,5 +28,6 @@ export default function useLobbyActions(
     ...management,
     ...rps,
     ...game,
+    ...chat,
   };
 }

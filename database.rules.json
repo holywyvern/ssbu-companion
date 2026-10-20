@@ -50,6 +50,21 @@
             ".validate": "newData.isString() && (newData.val() === 'draw' || newData.val() === root.child('lobbies').child($lobbyId).child('hostId').val() || newData.val() === root.child('lobbies').child($lobbyId).child('guestId').val())"
           }
         },
+        "messages": {
+          ".indexOn": ["timestamp"],
+          "$messageId": {
+            "reactions": {
+              "$reactionId": {
+                ".validate": "$reactionId.matches(/^(thumbs_up|heart|laugh|wow|sad|fire|eyes)$/)",
+                "$uid": {
+                  ".validate": "newData.val() === true && $uid === auth.uid"
+                }
+              }
+            },
+            ".write": "auth != null && (data.parent().parent().child('hostId').val() === auth.uid || data.parent().parent().child('guestId').val() === auth.uid) && newData.child('senderId').val() === auth.uid",
+            ".validate": "newData.hasChildren(['senderId', 'text', 'timestamp']) && newData.child('text').isString() && newData.child('text').val().length <= 200"
+          }
+        },
         "createdAt": {
           ".validate": "newData.isNumber() && (!data.exists() || data.val() === newData.val())"
         }
