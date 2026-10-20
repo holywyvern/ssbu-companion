@@ -7,6 +7,7 @@ export interface Lobby {
   hostId: string;
   guestId?: string;
   closedBy?: string;
+  presence?: Record<string, boolean>;
   status: string;
   settings: { format: string; assignment: string };
   createdAt: number;

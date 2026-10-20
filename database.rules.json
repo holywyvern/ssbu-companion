@@ -53,6 +53,11 @@
             ".validate": "newData.isString() && (newData.val() === 'draw' || newData.val() === root.child('lobbies').child($lobbyId).child('hostId').val() || newData.val() === root.child('lobbies').child($lobbyId).child('guestId').val())"
           }
         },
+        "presence": {
+          "$uid": {
+            ".validate": "newData.val() === true && $uid === auth.uid"
+          }
+        },
         "messages": {
           ".indexOn": ["timestamp"],
           "$messageId": {

@@ -13,6 +13,7 @@ import LoadingRoom from "@/components/preload/loading-room";
 import ChatDock from "@/components/chat/chat-dock";
 import AppNav from "@/components/app-nav";
 import LeaveLobbyButton from "@/components/lobby/leave-lobby-button";
+import OpponentStatus from "@/components/lobby/opponent-status";
 import LobbyClosedTab from "@/components/lobby/lobby-closed-tab";
 
 const wrap = (Tab: React.ComponentType) =>
@@ -36,6 +37,7 @@ export default function Lobby() {
     <div className="flex flex-1 flex-col lg:flex-row">
       {state !== "closed" && state !== "loading" && (
         <AppNav.Navigation>
+          <OpponentStatus />
           <LeaveLobbyButton />
         </AppNav.Navigation>
       )}
