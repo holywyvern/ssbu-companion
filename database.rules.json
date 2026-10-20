@@ -13,6 +13,30 @@
         "status": {
           ".validate": "newData.isString()"
         },
+        "game": {
+          "current": {
+            "number": { ".validate": "newData.isNumber()" },
+            "step": { ".validate": "newData.isString() && newData.val().matches(/^(characters|winnerCharacter|loserCharacter|homeBan|awayBan|ban|pick|playing)$/)" },
+            "characters": {
+              "$uid": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 40 && ($uid === root.child('lobbies').child($lobbyId).child('hostId').val() || $uid === root.child('lobbies').child($lobbyId).child('guestId').val())" }
+            },
+            "bans": { "$i": { ".validate": "newData.isString()" } },
+            "stage": { ".validate": "newData.isString()" },
+            "winnerId": { ".validate": "newData.isString()" },
+            "loserId": { ".validate": "newData.isString()" },
+            "extraBan": { ".validate": "newData.isString()" }
+          },
+          "wins": {
+            ".validate": "auth.uid === root.child('lobbies').child($lobbyId).child('hostId').val()",
+            "$uid": { ".validate": "newData.isNumber() && ($uid === root.child('lobbies').child($lobbyId).child('hostId').val() || $uid === root.child('lobbies').child($lobbyId).child('guestId').val())" }
+          },
+          "history": {
+            ".validate": "auth.uid === root.child('lobbies').child($lobbyId).child('hostId').val()"
+          },
+          "matchWinner": {
+            ".validate": "newData.isString() && auth.uid === root.child('lobbies').child($lobbyId).child('hostId').val()"
+          }
+        },
         "sides": {
           "home": { ".validate": "newData.isString()" },
           "away": { ".validate": "newData.isString()" }

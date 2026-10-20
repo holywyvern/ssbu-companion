@@ -2,8 +2,8 @@ import {
   sendRpsChoice,
   resetRps,
   continueFromRps,
-  pickSide,
-} from "@/lib/services/lobbies";
+} from "@/lib/services/rps";
+import { pickSide } from "@/lib/services/lobbies";
 import type { Lobby } from "@/lib/hooks/useLobby";
 
 export default function useLobbyRpsActions(

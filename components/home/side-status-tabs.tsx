@@ -1,7 +1,5 @@
 "use client";
-import { useContext } from "react";
-import { Loader2, Home, Plane } from "lucide-react";
-import { AppContext } from "@/lib/hooks/useApp";
+import { Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -22,23 +20,6 @@ export function WaitingSideTab() {
       <CardContent className="flex justify-center">
         <Loader2 className="size-8 animate-spin" />
       </CardContent>
-    </Card>
-  );
-}
-
-export function ReadyTab() {
-  const { lobby } = useContext(AppContext);
-  const isHome = lobby.data?.sides?.home === lobby.uid;
-  return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          {isHome ? <Home /> : <Plane />} You are {isHome ? "home" : "away"}
-        </CardTitle>
-        <CardDescription>
-          Your opponent is {isHome ? "away" : "home"}.
-        </CardDescription>
-      </CardHeader>
     </Card>
   );
 }

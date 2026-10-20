@@ -13,7 +13,7 @@ export default function RpsDone({ mine, theirs, onPlayAgain }: RpsDoneProps) {
   return (
     <>
       <RpsMatchup mine={mine} theirs={theirs} />
-      <Button variant="outline" onClick={onPlayAgain}>
+      <Button variant="outline" onClick={onPlayAgain} disabled>
         <RotateCcw /> Play again
       </Button>
     </>

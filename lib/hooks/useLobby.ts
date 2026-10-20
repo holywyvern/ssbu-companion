@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ref, onValue } from "firebase/database";
 import { db } from "@/lib/firebase/config";
+import type { GameState } from "@/lib/game";
 
 export interface Lobby {
   hostId: string;
@@ -10,6 +11,7 @@ export interface Lobby {
   createdAt: number;
   rps?: { picks?: Record<string, string>; winner?: string };
   sides?: { home: string; away: string };
+  game?: GameState;
 }
 
 export default function useLobby(id: string | null) {

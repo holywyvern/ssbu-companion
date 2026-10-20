@@ -7,7 +7,7 @@ export type LobbyViewState =
   | "rps"
   | "pickSide"
   | "waitingSide"
-  | "ready";
+  | "game";
 
 export default function useLobbyState(): LobbyViewState {
   const { lobby } = useContext(AppContext);
@@ -18,6 +18,6 @@ export default function useLobbyState(): LobbyViewState {
     const picker = status === "hostPicks" ? lobby.isHost : lobby.isGuest;
     return picker ? "pickSide" : "waitingSide";
   }
-  if (status === "ready") return "ready";
+  if (status === "game") return "game";
   return "invite";
 }

@@ -5,8 +5,9 @@ import useLobbyState from "@/lib/hooks/useLobbyState";
 import Invite from "@/components/pages/invite";
 import Rps from "@/components/pages/rps";
 import { SidePage } from "@/components/pages/side";
-import { WaitingSideTab, ReadyTab } from "@/components/home/side-status-tabs";
+import { WaitingSideTab } from "@/components/home/side-status-tabs";
 import PickSideTab from "@/components/home/pick-side-tab";
+import GameTab from "@/components/pages/game-tab";
 import Select from "@/components/select";
 import LoadingRoom from "@/components/preload/loading-room";
 
@@ -21,7 +22,7 @@ const pages = {
   rps: Rps,
   pickSide: wrap(PickSideTab),
   waitingSide: wrap(WaitingSideTab),
-  ready: wrap(ReadyTab),
+  game: GameTab,
 };
 
 export default function Lobby() {
