@@ -1,11 +1,12 @@
-const admin = require("firebase-admin");
+const { initializeApp, cert } = require("firebase-admin/app");
+const { getDatabase } = require("firebase-admin/database");
 // Initialize with service account credentials stored in GitHub Secrets
-admin.initializeApp({
-  credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)),
+initializeApp({
+  credential: cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)),
   databaseURL: "https://ssbu-companion-default-rtdb.firebaseio.com"
 });
 
-const db = admin.database();
+const db = getDatabase();
 
 const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000; 
 
