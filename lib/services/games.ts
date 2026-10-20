@@ -77,9 +77,22 @@ export async function pickStage(
   });
 }
 
+export async function restartMatch(lobbyId: string, uid: string) {
+  await runTransaction(ref(db, `lobbies/${lobbyId}`), (lobby) => {
+    if (!lobby || lobby.hostId !== uid || !lobby.game?.matchWinner) return;
+    delete lobby.game;
+    delete lobby.sides;
+    delete lobby.rps;
+    lobby.status =
+      lobby.settings?.assignment === "rps" ? "rps" : "hostPicks";
+    return lobby;
+  });
+}
+
 export async function reportWinner(
   lobbyId: string,
-  winnerId: string,
+  uid: string,
+  reportedWinnerId: string,
   sides: Sides,
   needed: number,
 ) {
@@ -89,6 +102,14 @@ export async function reportWinner(
       if (!game) return game;
       const cur = game.current;
       if (!cur || cur.step !== "playing" || !cur.stage) return;
+      if (uid !== sides.home && uid !== sides.away) return;
+      const reports = { ...(cur.reports ?? {}), [uid]: reportedWinnerId };
+      const homeReport = reports[sides.home];
+      const awayReport = reports[sides.away];
+      if (!homeReport || !awayReport || homeReport !== awayReport) {
+        return { ...game, current: { ...cur, reports } };
+      }
+      const winnerId = homeReport;
       const loserId = winnerId === sides.home ? sides.away : sides.home;
       const entry: GameHistoryEntry = {
         number: cur.number,

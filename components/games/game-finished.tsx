@@ -1,9 +1,10 @@
 "use client";
-import { Trophy } from "lucide-react";
+import { RotateCcw, Trophy } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import useGame from "@/lib/hooks/useGame";
 
 export default function GameFinished() {
-  const { matchWinner, uid, history } = useGame();
+  const { matchWinner, uid, history, isHost, restart, busy } = useGame();
   const won = matchWinner === uid;
   return (
     <div className="flex flex-col gap-4">
@@ -21,6 +22,16 @@ export default function GameFinished() {
           </li>
         ))}
       </ul>
+      {isHost ? (
+        <Button onClick={restart} disabled={busy}>
+          <RotateCcw />
+          Play again
+        </Button>
+      ) : (
+        <p className="text-center text-sm text-muted-foreground">
+          Waiting for the host to start a new match...
+        </p>
+      )}
     </div>
   );
 }

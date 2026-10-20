@@ -3,6 +3,7 @@ import {
   chooseCharacter,
   pickStage,
   reportWinner,
+  restartMatch,
 } from "@/lib/services/games";
 import { WINS_NEEDED } from "@/lib/game";
 import type { Lobby } from "@/lib/hooks/useLobby";
@@ -26,9 +27,19 @@ export default function useLobbyGameActions(
     await pickStage(id, uid, stage, sides);
   };
   const reportGameWinner = async (winnerId: string) => {
-    if (!id || !sides || !lobby || lobby.hostId !== uid) return;
+    if (!id || !sides || !lobby) return;
     const needed = WINS_NEEDED[lobby.settings.format] ?? 2;
-    await reportWinner(id, winnerId, sides, needed);
+    await reportWinner(id, uid, winnerId, sides, needed);
   };
-  return { pickCharacter, banGameStages, pickGameStage, reportGameWinner };
+  const restartGame = async () => {
+    if (!id || !lobby || lobby.hostId !== uid) return;
+    await restartMatch(id, uid);
+  };
+  return {
+    pickCharacter,
+    banGameStages,
+    pickGameStage,
+    reportGameWinner,
+    restartGame,
+  };
 }

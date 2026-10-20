@@ -146,6 +146,7 @@ export interface GameCurrent {
   winnerId?: string;
   loserId?: string;
   extraBan?: string;
+  reports?: Record<string, string>;
 }
 
 export interface GameHistoryEntry {

@@ -11,7 +11,7 @@
           ".validate": "newData.isString()"
         },
         "status": {
-          ".validate": "newData.isString()"
+          ".validate": "newData.isString() && newData.val().matches(/^(LOBBY_SETUP|rps|hostPicks|guestPicks|game)$/) && (!data.exists() || data.val() !== 'game' || newData.val() === 'game' || auth.uid === data.parent().child('hostId').val())"
         },
         "game": {
           "current": {
@@ -24,17 +24,16 @@
             "stage": { ".validate": "newData.isString()" },
             "winnerId": { ".validate": "newData.isString()" },
             "loserId": { ".validate": "newData.isString()" },
-            "extraBan": { ".validate": "newData.isString()" }
+            "extraBan": { ".validate": "newData.isString()" },
+            "reports": {
+              "$uid": { ".validate": "newData.isString() && ($uid === root.child('lobbies').child($lobbyId).child('hostId').val() || $uid === root.child('lobbies').child($lobbyId).child('guestId').val()) && (newData.val() === root.child('lobbies').child($lobbyId).child('hostId').val() || newData.val() === root.child('lobbies').child($lobbyId).child('guestId').val()) && (data.val() === newData.val() || auth.uid === $uid)" }
+            }
           },
           "wins": {
-            ".validate": "auth.uid === root.child('lobbies').child($lobbyId).child('hostId').val()",
             "$uid": { ".validate": "newData.isNumber() && ($uid === root.child('lobbies').child($lobbyId).child('hostId').val() || $uid === root.child('lobbies').child($lobbyId).child('guestId').val())" }
           },
-          "history": {
-            ".validate": "auth.uid === root.child('lobbies').child($lobbyId).child('hostId').val()"
-          },
           "matchWinner": {
-            ".validate": "newData.isString() && auth.uid === root.child('lobbies').child($lobbyId).child('hostId').val()"
+            ".validate": "newData.isString() && (newData.val() === root.child('lobbies').child($lobbyId).child('hostId').val() || newData.val() === root.child('lobbies').child($lobbyId).child('guestId').val())"
           }
         },
         "sides": {

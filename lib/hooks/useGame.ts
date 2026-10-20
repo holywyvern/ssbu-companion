@@ -29,6 +29,12 @@ export default function useGame() {
   const blind = current?.step === "characters";
   const myCharacter = characters[uid];
   const opponentCharacter = blind || !opponentId ? undefined : characters[opponentId];
+  const reports = current?.reports ?? {};
+  const myReport = reports[uid];
+  const opponentReport = opponentId ? reports[opponentId] : undefined;
+  const reportConflict = Boolean(
+    myReport && opponentReport && myReport !== opponentReport,
+  );
 
   const run = async (action: () => Promise<void>) => {
     setBusy(true);
@@ -62,12 +68,16 @@ export default function useGame() {
     busy,
     myCharacter,
     opponentCharacter,
+    myReport,
+    opponentReport,
+    reportConflict,
     banInfo: current ? banRule(current) : undefined,
     pickable: current ? availableStages(current) : [],
     chooseCharacter: (character: string) =>
       run(() => lobby.pickCharacter(character)),
     banStages: (stages: string[]) => run(() => lobby.banGameStages(stages)),
     pickStage: (stage: string) => run(() => lobby.pickGameStage(stage)),
+    restart: () => run(() => lobby.restartGame()),
     reportWinner: (winnerId: string) =>
       run(() => lobby.reportGameWinner(winnerId)),
   };
