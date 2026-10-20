@@ -13,11 +13,16 @@ import {
 
 export default function PickSideTab() {
   const { lobby } = useContext(AppContext);
+  const byRps = lobby.data?.settings.assignment === "rps";
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>You won!</CardTitle>
-        <CardDescription>Choose who is home and who is away.</CardDescription>
+        <CardTitle>{byRps ? "You won at rock paper scissors!" : "Choose your side"}</CardTitle>
+        <CardDescription>
+          {byRps
+            ? "Choose who is home and who is away."
+            : "As the host, choose who is home and who is away."}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex gap-2">
         <Button className="flex-1" onClick={() => lobby.chooseSide("home")}>
