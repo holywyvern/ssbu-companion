@@ -9,7 +9,7 @@ const Context = createContext<{ nav: HTMLElement|null; setNav: Dispatch<SetState
 export default function AppNav() {
   const { setNav } = useContext(Context);
   return (
-    <nav className="bg-gray-200 dark:text-white dark:bg-gray-800 flex items-center justify-between p-2">
+    <nav className="bg-gray-200 dark:text-white dark:bg-gray-800 flex items-center justify-between p-2 pt-[max(0.5rem,env(safe-area-inset-top))] pl-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))]">
       <h1 >SSBU Companion</h1>
       <div ref={setNav} />
       <ModeToggle />
