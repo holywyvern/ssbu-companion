@@ -2,7 +2,11 @@
 
 import * as React from "react"
 import { cn } from "cn"
-import { OTPInput, OTPInputContext } from "input-otp"
+import {
+  OTPInput,
+  OTPInputContext,
+  REGEXP_ONLY_DIGITS_AND_CHARS,
+} from "input-otp"
 import { MinusIcon } from "lucide-react"
 
 function InputOTP({
@@ -20,6 +24,10 @@ function InputOTP({
         containerClassName
       )}
       spellCheck={false}
+      inputMode="text"
+      pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+      autoCapitalize="characters"
+      autoCorrect="off"
       className={cn("disabled:cursor-not-allowed", className)}
       {...props}
     />
