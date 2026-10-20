@@ -55,7 +55,7 @@
         },
         "presence": {
           "$uid": {
-            ".validate": "newData.val() === true && $uid === auth.uid"
+            ".validate": "newData.val() === true && ($uid === auth.uid || data.val() === true)"
           }
         },
         "messages": {
@@ -65,7 +65,7 @@
               "$reactionId": {
                 ".validate": "$reactionId.matches(/^(thumbs_up|heart|laugh|wow|sad|fire|eyes)$/)",
                 "$uid": {
-                  ".validate": "newData.val() === true && $uid === auth.uid"
+                  ".validate": "newData.val() === true && ($uid === auth.uid || data.val() === true)"
                 }
               }
             },

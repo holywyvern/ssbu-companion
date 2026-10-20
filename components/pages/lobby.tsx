@@ -13,7 +13,6 @@ import LoadingRoom from "@/components/preload/loading-room";
 import ChatDock from "@/components/chat/chat-dock";
 import AppNav from "@/components/app-nav";
 import LeaveLobbyButton from "@/components/lobby/leave-lobby-button";
-import OpponentStatus from "@/components/lobby/opponent-status";
 import LobbyClosedTab from "@/components/lobby/lobby-closed-tab";
 import LobbyErrorTab from "@/components/lobby/lobby-error-tab";
 import ConnectionBanner from "@/components/lobby/connection-banner";
@@ -40,7 +39,6 @@ export default function Lobby() {
     <div className="flex flex-1 flex-col lg:flex-row">
       {state !== "closed" && state !== "loading" && state !== "error" && (
         <AppNav.Navigation>
-          <OpponentStatus />
           <LeaveLobbyButton />
         </AppNav.Navigation>
       )}

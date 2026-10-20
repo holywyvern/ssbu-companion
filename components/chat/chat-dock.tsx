@@ -6,6 +6,7 @@ import useLobbyMessages from "@/lib/hooks/useLobbyMessages";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import ChatPanel from "@/components/chat/chat-panel";
+import OpponentStatus from "@/components/lobby/opponent-status";
 
 export default function ChatDock() {
   const { lobby } = useContext(AppContext);
@@ -71,12 +72,13 @@ export default function ChatDock() {
           "lg:sticky lg:top-0 lg:z-auto lg:flex lg:h-[calc(100dvh-3rem)] lg:w-80 lg:shrink-0 lg:self-start lg:border-l lg:pb-3",
         )}
       >
-        <div className="mb-2 flex items-center justify-between lg:hidden">
-          <h2 className="text-sm font-medium">Chat</h2>
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <OpponentStatus />
           <Button
             type="button"
             variant="ghost"
             size="icon"
+            className="lg:hidden"
             onClick={close}
           >
             <X />
