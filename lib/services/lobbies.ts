@@ -1,5 +1,5 @@
 import {Filter} from "bad-words";
-import { ref, set, get, runTransaction } from "firebase/database";
+import { ref, set, get, update, runTransaction } from "firebase/database";
 import { db } from "@/lib/firebase/config";
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -51,13 +51,72 @@ export async function createLobby(
   return lobbyId;
 }
 
+const RPS_BEATS: Record<string, string> = {
+  rock: "scissors",
+  paper: "rock",
+  scissors: "paper",
+};
+
+export async function sendRpsChoice(
+  lobbyId: string,
+  uid: string,
+  choice: string,
+  hostId: string,
+  guestId: string,
+) {
+  await runTransaction(ref(db, `lobbies/${lobbyId}/rps`), (current) => {
+    const rps = current ?? {};
+    if (rps.winner) return;
+    const picks = { ...(rps.picks ?? {}), [uid]: choice };
+    const next: { picks: Record<string, string>; winner?: string } = { picks };
+    const hostPick = picks[hostId];
+    const guestPick = picks[guestId];
+    if (hostPick && guestPick) {
+      if (hostPick === guestPick) next.winner = "draw";
+      else next.winner = RPS_BEATS[hostPick] === guestPick ? hostId : guestId;
+    }
+    return next;
+  });
+}
+
+export async function resetRps(lobbyId: string) {
+  await set(ref(db, `lobbies/${lobbyId}/rps`), null);
+}
+
+export async function continueFromRps(lobbyId: string) {
+  await runTransaction(ref(db, `lobbies/${lobbyId}`), (lobby) => {
+    const winner = lobby?.rps?.winner;
+    if (!lobby || lobby.status !== "rps" || !winner || winner === "draw") {
+      return;
+    }
+    lobby.status = winner === lobby.hostId ? "hostPicks" : "guestPicks";
+    return lobby;
+  });
+}
+
+export async function pickSide(
+  lobbyId: string,
+  uid: string,
+  hostId: string,
+  guestId: string,
+  side: "home" | "away",
+) {
+  const other = uid === hostId ? guestId : hostId;
+  await update(ref(db, `lobbies/${lobbyId}`), {
+    sides: side === "home" ? { home: uid, away: other } : { home: other, away: uid },
+    status: "ready",
+  });
+}
+
 export async function joinLobby(guestId: string, lobbyId: string) {
   const lobbyRef = ref(db, `lobbies/${lobbyId}`);
 
   try {
     const result = await runTransaction(lobbyRef, (currentLobby) => {
       if (currentLobby === null) {
-        return; 
+        // First run uses the (empty) local cache; aborting here would fail
+        // every join. Returning null makes the SDK retry with server data.
+        return currentLobby;
       }
       if (currentLobby.guestId && currentLobby.guestId !== guestId) {
         return;
@@ -70,7 +129,7 @@ export async function joinLobby(guestId: string, lobbyId: string) {
       }
       return currentLobby;
     });
-    if (!result.committed) {
+    if (!result.committed || !result.snapshot.exists()) {
       throw new Error("Lobby is already full or does not exist.");
     }
   } catch (error: any) {

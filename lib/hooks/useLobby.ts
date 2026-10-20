@@ -4,9 +4,12 @@ import { db } from "@/lib/firebase/config";
 
 export interface Lobby {
   hostId: string;
+  guestId?: string;
   status: string;
   settings: { format: string; assignment: string };
   createdAt: number;
+  rps?: { picks?: Record<string, string>; winner?: string };
+  sides?: { home: string; away: string };
 }
 
 export default function useLobby(id: string | null) {

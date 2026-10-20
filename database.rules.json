@@ -13,6 +13,20 @@
         "status": {
           ".validate": "newData.isString()"
         },
+        "sides": {
+          "home": { ".validate": "newData.isString()" },
+          "away": { ".validate": "newData.isString()" }
+        },
+        "rps": {
+          "picks": {
+            "$uid": {
+              ".validate": "($uid === root.child('lobbies').child($lobbyId).child('hostId').val() || $uid === root.child('lobbies').child($lobbyId).child('guestId').val()) && (newData.val() === 'rock' || newData.val() === 'paper' || newData.val() === 'scissors')"
+            }
+          },
+          "winner": {
+            ".validate": "newData.isString() && (newData.val() === 'draw' || newData.val() === root.child('lobbies').child($lobbyId).child('hostId').val() || newData.val() === root.child('lobbies').child($lobbyId).child('guestId').val())"
+          }
+        },
         "createdAt": {
           ".validate": "newData.isNumber() && (!data.exists() || data.val() === newData.val())"
         }

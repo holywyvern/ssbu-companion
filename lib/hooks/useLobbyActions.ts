@@ -1,22 +1,27 @@
 import { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
-import { createLobby, joinLobby } from "@/lib/services/lobbies";
 import useUser from "@/lib/hooks/useUser";
 import useLobby from "@/lib/hooks/useLobby";
+import useLobbyManagementActions from "@/lib/hooks/useLobbyManagementActions";
+import useLobbyRpsActions from "@/lib/hooks/useLobbyRpsActions";
 
-export default function useLobbyActions(setPage: Dispatch<SetStateAction<string>>) {
+export default function useLobbyActions(
+  setPage: Dispatch<SetStateAction<string>>,
+) {
   const user = useUser();
   const [id, setId] = useState<string | null>(null);
   const lobby = useLobby(id);
-  const create = async (format: string, assignment: string) => {
-    const newLobbyId = await createLobby(user.uid, format, assignment);
-    setId(newLobbyId);
-    setPage("lobby");
+  const management = useLobbyManagementActions(user.uid, setId, setPage);
+  const rps = useLobbyRpsActions(user.uid, id, lobby.data);
+  const isHost = lobby.data?.hostId === user.uid;
+  const isGuest = lobby.data?.guestId === user.uid;
+  return {
+    id,
+    ...lobby,
+    isHost,
+    isGuest,
+    uid: user.uid,
+    ...management,
+    ...rps,
   };
-  const join = async (lobbyId: string) => {
-    await joinLobby(user.uid, lobbyId);
-    setId(lobbyId);
-    setPage("lobby");
-  };
-  return { create, join, id, ...lobby };
 }
